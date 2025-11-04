@@ -1,29 +1,21 @@
 const express = require("express");
-const { addMarketData, 
-        getMarketData, 
-        updateMarketData, 
-        deleteMarketData, 
-        addRating,  // ✅ Add this import
-        seedMarketData } = require("../controllers/marketController");
-
+const { addMarketData, getMarketData, updateMarketData, deleteMarketData, seedMarketData, addRating } = require("../controllers/marketController");
 const auth = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // Admin routes
 router.post("/", auth("admin"), addMarketData);
-router.put("/:id", auth("admin"), updateMarketData);
-router.delete("/:id", auth("admin"), deleteMarketData);
+router.post("/seed", auth("admin"), seedMarketData);
 
 // Public routes
 router.get("/", getMarketData);
 
+// Admin management
+router.put("/:id", auth("admin"), updateMarketData);
+router.delete("/:id", auth("admin"), deleteMarketData);
 
-// ✅ Rating route (for farmers)
+// Rating route (for farmers)
 router.post("/:id/rate", auth("farmer"), addRating);
-
-// 🌱 Seed data (admin only)
-router.post("/seed", auth("admin"), seedMarketData);
-
 
 module.exports = router;
